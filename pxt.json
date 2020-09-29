@@ -2,7 +2,8 @@
     "name": "Castle Game Jam",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "color-coded-tilemap": "*"
     },
     "files": [
         "main.ts",
