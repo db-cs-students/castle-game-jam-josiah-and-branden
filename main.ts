@@ -1,11 +1,11 @@
 /** 
 Title:Castle Jump
-Creators:Josiah Blevins, 
+Creators:Josiah Blevins, Brandon White
 Description:Castle Platformer
 
  */
 //  Opening Text
-game.splash("Get a score of 10 to win!")
+game.splash("Get a score of 4 to win!")
 //  Set Up Tilemap
 scene.setTileMap(img`
     2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222....................
@@ -307,8 +307,14 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_event_pressed() 
 })
 my_sprite.setKind(SpriteKind.Player)
 //  Set Up Jump
+let candoublejump = true
 controller.B.onEvent(ControllerButtonEvent.Pressed, function on_jump() {
-    my_sprite.vy = -75
+    
+    if (candoublejump) {
+        my_sprite.vy = -75
+        candoublejump = my_sprite.isHittingTile(CollisionDirection.Bottom)
+    }
+    
 })
 //  Set Up Lives/Score
 info.setScore(0)
@@ -427,11 +433,19 @@ scene.onHitTile(SpriteKind.Player, 4, function on_hit_tile(sprite: Sprite) {
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function on_overlap(sprite: Sprite, otherSprite: Sprite) {
     info.changeScoreBy(1)
     pause(1000)
+    otherSprite.destroy()
 })
 //  Gravity
 my_sprite.ay = 100
 //  Win Condition
-if (info.score() == 10) {
-    game.over(true)
-}
-
+game.onUpdate(function on_update() {
+    
+    if (info.score() == 4) {
+        game.over(true)
+    }
+    
+    if (my_sprite.isHittingTile(CollisionDirection.Bottom)) {
+        candoublejump = true
+    }
+    
+})

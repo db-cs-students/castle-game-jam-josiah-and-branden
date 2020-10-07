@@ -1,10 +1,10 @@
 """
 Title:Castle Jump
-Creators:Josiah Blevins, 
+Creators:Josiah Blevins, Brandon White
 Description:Castle Platformer
 """
 # Opening Text
-game.splash("Get a score of 10 to win!")
+game.splash("Get a score of 4 to win!")
 
 # Set Up Tilemap
 scene.set_tile_map(img("""
@@ -309,8 +309,12 @@ controller.A.on_event(ControllerButtonEvent.PRESSED, on_event_pressed)
 my_sprite.set_kind(SpriteKind.player)
 
 # Set Up Jump
+candoublejump = True
 def on_jump():
-    my_sprite.vy = (-75)
+    global candoublejump
+    if candoublejump:
+        my_sprite.vy = (-75)
+        candoublejump = my_sprite.is_hitting_tile(CollisionDirection.BOTTOM)
 controller.B.on_event(ControllerButtonEvent.PRESSED, on_jump)
 
 # Set Up Lives/Score
@@ -436,11 +440,19 @@ scene.on_hit_tile(SpriteKind.player, 4, on_hit_tile)
 def on_overlap(sprite, otherSprite):
     info.change_score_by(1)
     pause(1000)
+    otherSprite.destroy()
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_overlap)
 
 # Gravity
 my_sprite.ay = 100
 
 # Win Condition
-if info.score() == 10:
-    game.over(True)
+def on_update():
+    global candoublejump
+    if info.score() == 4:
+        game.over(True)
+    if my_sprite.is_hitting_tile(CollisionDirection.BOTTOM):
+        candoublejump = True
+game.on_update(on_update)
+
+# Double Jump Limit
