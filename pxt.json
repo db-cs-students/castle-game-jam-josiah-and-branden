@@ -3,7 +3,8 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "color-coded-tilemap": "*"
+        "color-coded-tilemap": "*",
+        "animation": "*"
     },
     "files": [
         "main.ts",
